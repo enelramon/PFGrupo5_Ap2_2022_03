@@ -151,6 +151,9 @@ fun RegistroUsiario(
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
+                        if (!validateName(usuarioViewModel.nombre)){
+                            Toast.makeText(context, "Por favor revise el campo Nombre", Toast.LENGTH_SHORT).show()
+                        }
 
                     }
                 ){
@@ -174,4 +177,7 @@ fun RegistroUsiario(
             }
         }
     }
+}
+fun validateName(evaluacion: String) : Boolean{
+    return evaluacion.isNotEmpty() && evaluacion.length > 2
 }
