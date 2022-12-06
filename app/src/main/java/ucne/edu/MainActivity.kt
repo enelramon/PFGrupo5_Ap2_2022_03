@@ -14,6 +14,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
+import ucne.edu.ui.Agenda.ConsultaAgenda
 import ucne.edu.ui.Login.LoginScreen
 import ucne.edu.ui.Login.RegistroUsiario
 import ucne.edu.ui.navegacion.Screen
@@ -48,5 +49,9 @@ fun MyApp(){
         composable(Screen.RegistroUsuarios.route) {
             RegistroUsiario(navHostController = navHostController)
         }
+        composable(Screen.ConsultaAgenda.route){
+            ConsultaAgenda(navHostController = navHostController)
+        }
+
     }
 }
