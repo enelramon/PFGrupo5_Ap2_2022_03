@@ -33,19 +33,31 @@ fun RegistroUsiario(
     navHostController: NavHostController,
     usuarioViewModel: UsuarioViewModel = hiltViewModel()
 ) {
-    var error by rememberSaveable{ mutableStateOf(false) }
+
     val context = LocalContext.current
 
     val image = painterResource(id = R.drawable.registro)
 
     val nameValue = remember { mutableStateOf("") }
     val emailValue = remember { mutableStateOf("") }
-    val phoneValue = remember { mutableStateOf("") }
     val passwordValue = remember { mutableStateOf("") }
     val confirmPasswordValue = remember { mutableStateOf("") }
 
     val passwordVisibility = remember { mutableStateOf(false) }
     val confirmPasswordVisibility = remember { mutableStateOf(false) }
+
+    fun validateName(evaluacion: String) : Boolean{
+        return evaluacion.isNotEmpty() && evaluacion.length > 2
+    }
+    fun validateEmail(email: String): Boolean {
+        var patron = "([a-z0-9]+@[a-z]+\\.[a-z]{2,3})".toRegex()
+        return patron.containsMatchIn(email)
+    }
+
+    fun validatePassword(password: String): Boolean {
+        var valido = "([A-Z0-9a-z])".toRegex()
+        return valido.containsMatchIn(password)
+    }
 
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
         Box(
@@ -103,8 +115,8 @@ fun RegistroUsiario(
                 OutlinedTextField(
                     value = passwordValue.value,
                     onValueChange = { passwordValue.value = it },
-                    label = { Text(text = "Password") },
-                    placeholder = { Text(text = "Password") },
+                    label = { Text(text = "Contraseña") },
+                    placeholder = { Text(text = "Contraseña") },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(0.8f),
                     trailingIcon = {
@@ -143,24 +155,41 @@ fun RegistroUsiario(
                 )
                 Spacer(modifier = Modifier.padding(10.dp))
                 androidx.compose.material3.OutlinedButton(
-                    onClick = {
-                        if (!validateEmail(usuarioViewModel.email)) {
-                            Toast.makeText(
-                                context,
-                                "Revise el formato del campo Email",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                        if (!validateName(usuarioViewModel.nombre)){
-                            Toast.makeText(context, "Por favor revise el campo Nombre", Toast.LENGTH_SHORT).show()
-                        }
-
-                    }
-                ){
-                    Button(onClick = { }, modifier = Modifier
-                        .fillMaxWidth(0.8f)
-                        .height(50.dp)) {
-                        Text(text = "Registrar", fontSize =  TextUnit(20F, TextUnitType.Sp))
+                    onClick = {}
+                ) {
+                    Button(
+                        onClick = {
+                            if (validateEmail(usuarioViewModel.email)) {
+                                Toast.makeText(
+                                    context,
+                                    "Revise el formato del Email",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            } else if (validateName(usuarioViewModel.nombre)) {
+                                Toast.makeText(
+                                    context,
+                                    "Por favor revise el Nombre",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            } else if (validatePassword(usuarioViewModel.password)) {
+                                Toast.makeText(
+                                    context,
+                                    "Contraseña incorrecta",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            } else if (!validateEmail(usuarioViewModel.email) && !validatePassword(
+                                    usuarioViewModel.password
+                                ) && !validateName(usuarioViewModel.nombre)
+                            ) {
+                                usuarioViewModel.Guardar()
+                                navHostController.navigate(Screen.LoginScreen.route)
+                            }
+                        }, modifier = Modifier
+                            .fillMaxWidth(0.8f)
+                            .height(50.dp),
+                        colors = ButtonDefaults.buttonColors(colorResource(id = R.color.Verde3))
+                    ) {
+                        Text(text = "Registrar", fontSize = TextUnit(20F, TextUnitType.Sp))
                     }
                 }
 
@@ -177,7 +206,4 @@ fun RegistroUsiario(
             }
         }
     }
-}
-fun validateName(evaluacion: String) : Boolean{
-    return evaluacion.isNotEmpty() && evaluacion.length > 2
 }
