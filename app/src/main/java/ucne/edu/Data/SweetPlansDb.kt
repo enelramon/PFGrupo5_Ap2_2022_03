@@ -2,6 +2,7 @@ package ucne.edu.Data
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import ucne.edu.Data.Dao.AgendaDao
 import ucne.edu.Data.Dao.UsuarioDao
 import ucne.edu.model.Usuario
 
@@ -15,5 +16,5 @@ import ucne.edu.model.Usuario
 )
 abstract class SweetPlansDb : RoomDatabase() {
     abstract val usuarioDao: UsuarioDao
-    //abstract val RegistroAgendaDao : RegistroAgendaDao
+    abstract val AgendaDao : AgendaDao
 }
