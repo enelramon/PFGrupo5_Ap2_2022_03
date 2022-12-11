@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -45,19 +44,6 @@ fun RegistroUsiario(
 
     val passwordVisibility = remember { mutableStateOf(false) }
     val confirmPasswordVisibility = remember { mutableStateOf(false) }
-
-    fun validateName(evaluacion: String) : Boolean{
-        return evaluacion.isNotEmpty() && evaluacion.length > 2
-    }
-    fun validateEmail(email: String): Boolean {
-        var patron = "([a-z0-9]+@[a-z]+\\.[a-z]{2,3})".toRegex()
-        return patron.containsMatchIn(email)
-    }
-
-    fun validatePassword(password: String): Boolean {
-        var valido = "([A-Z0-9a-z])".toRegex()
-        return valido.containsMatchIn(password)
-    }
 
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
         Box(
@@ -159,27 +145,27 @@ fun RegistroUsiario(
                 ) {
                     Button(
                         onClick = {
-                            if (validateEmail(usuarioViewModel.email)) {
+                            if (usuarioViewModel.validateEmail(usuarioViewModel.email)) {
                                 Toast.makeText(
                                     context,
                                     "Revise el formato del Email",
                                     Toast.LENGTH_SHORT
                                 ).show()
-                            } else if (validateName(usuarioViewModel.nombre)) {
+                            } else if (usuarioViewModel.validateName(usuarioViewModel.nombre)) {
                                 Toast.makeText(
                                     context,
                                     "Por favor revise el Nombre",
                                     Toast.LENGTH_SHORT
                                 ).show()
-                            } else if (validatePassword(usuarioViewModel.password)) {
+                            } else if (usuarioViewModel.validatePassword(usuarioViewModel.password)) {
                                 Toast.makeText(
                                     context,
                                     "Contraseña incorrecta",
                                     Toast.LENGTH_SHORT
                                 ).show()
-                            } else if (!validateEmail(usuarioViewModel.email) && !validatePassword(
+                            } else if (!usuarioViewModel.validateEmail(usuarioViewModel.email) && !usuarioViewModel.validatePassword(
                                     usuarioViewModel.password
-                                ) && !validateName(usuarioViewModel.nombre)
+                                ) && !usuarioViewModel.validateName(usuarioViewModel.nombre)
                             ) {
                                 usuarioViewModel.Guardar()
                                 navHostController.navigate(Screen.LoginScreen.route)
