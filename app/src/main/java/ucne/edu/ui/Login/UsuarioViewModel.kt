@@ -47,4 +47,16 @@ class UsuarioViewModel  @Inject constructor (
             )
         }
     }
+    fun validateName(evaluacion: String) : Boolean{
+        return evaluacion.isNotEmpty() && evaluacion.length > 2
+    }
+    fun validateEmail(email: String): Boolean {
+        var patron = "([a-z0-9]+@[a-z]+\\.[a-z]{2,3})".toRegex()
+        return patron.containsMatchIn(email)
+    }
+
+    fun validatePassword(password: String): Boolean {
+        var valido = "([A-Z0-9a-z])".toRegex()
+        return valido.containsMatchIn(password)
+    }
 }
